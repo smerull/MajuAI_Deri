@@ -1,52 +1,84 @@
-# AI Chatbot (Express + OpenAI)
+# Chatbot Pintar untuk Anak SD
 
-Simple chatbot scaffold using Node.js, Express, and OpenAI Chat Completions.
+Halo! 👋
+Ini adalah proyek **Chatbot Pintar** yang bisa menjawab pertanyaan dengan bantuan **kecerdasan buatan (AI)**.
+Chatbot ini dibuat supaya anak-anak bisa **belajar, bertanya, dan bermain** dengan cara yang seru.
 
-Features:
-- Small web UI served from `public/`
-- `/api/chat` endpoint that proxies to OpenAI
-- Client maintains conversation history and system prompt
-- Controls for model, temperature, and max tokens
+---
 
-Setup
+## Apa itu Chatbot?
 
-1. Copy `.env.example` to `.env` and set `OPENAI_API_KEY`.
-2. Install dependencies: `npm install`.
-3. Start server: `npm start` (or `npm run dev` with nodemon).
-4. Open http://localhost:3000 in your browser.
+Chatbot adalah program komputer yang bisa diajak **ngobrol seperti teman**.
+Kamu bisa mengetik pertanyaan, lalu chatbot akan menjawab.
 
-Notes
-- This project uses the OpenAI REST API; make sure your key is valid and has access to the selected model.
-- The backend proxies requests so your API key stays server-side.
+---
 
-Streamlit alternative UI
+## Fitur Utama
 
-This project includes a Streamlit-based UI that you can run instead of the web frontend.
+* 💬 Bisa ngobrol dengan bahasa sederhana.
+* 📚 Membantu menjawab pertanyaan tentang pelajaran atau hal sehari-hari.
+* 🎨 Bisa dipakai untuk belajar menulis, berhitung, atau sekadar bertanya.
+* 🌐 Bisa dijalankan di laptop atau browser (Google Chrome, dll.).
 
-1. Create a Python virtual environment and activate it (example on Windows PowerShell):
+---
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
+## Cara Menjalankan
 
-2. Install Python dependencies:
+1. **Siapkan kunci ajaib (API Key)**
+   Supaya chatbot bisa jalan, kita butuh kunci dari OpenAI. Tanya guru atau kakak untuk membantumu menaruh kunci ini di file `.env`.
 
-```powershell
-pip install -r requirements.txt
-```
+2. **Nyalakan program**
 
-3. Ensure `OPENAI_API_KEY` is set in environment or paste it into the sidebar field when running the app.
+   * Buka terminal (cmd atau PowerShell).
+   * Ketik perintah:
 
-4. Run Streamlit:
+     ```
+     npm install
+     npm start
+     ```
+   * Kalau mau jalankan mode pengembang:
 
-```powershell
-streamlit run streamlit_app.py
-```
+     ```
+     npm run dev
+     ```
 
-The Streamlit UI provides controls for model, temperature, max tokens, and system prompt.
+3. **Buka di browser**
+   Pergi ke [http://localhost:3000](http://localhost:3000)
+   Di sana kamu bisa langsung ngobrol dengan chatbot.
 
-Next steps / improvements
-- Add message streaming for real-time tokens
-- Add authentication and rate-limits
-- Add server-side validation and logging
+---
+
+## Tampilan
+
+* Ada kotak obrolan seperti aplikasi chat.
+* Bisa pilih **model AI** (otak chatbot), **temperatur** (kreatif atau serius), dan **panjang jawaban**.
+* Ada juga versi aplikasi dengan **Streamlit** (Python), yang punya tampilan sederhana dengan tombol dan slider.
+
+---
+
+## Siapa yang Bisa Pakai?
+
+* 👦 Anak SD untuk belajar.
+* 👩‍🏫 Guru untuk membantu menjawab pertanyaan murid.
+* 👨‍👩‍👧 Orang tua yang ingin mendampingi anak belajar.
+
+---
+
+## Catatan
+
+* Chatbot ini tetap butuh **pendampingan guru atau orang tua**, supaya penggunaan tetap aman.
+* Jangan masukkan informasi pribadi.
+* Gunakan dengan bijak untuk belajar dan bermain.
+
+---
+
+## Ide Perbaikan ke Depan
+
+* 🟢 Menambahkan suara (jadi bisa ngobrol pakai suara).
+* 🟢 Membuat jawaban lebih ramah untuk anak.
+* 🟢 Menambahkan permainan edukasi sederhana.
+
+---
+
+Selamat mencoba! 🚀
+Chatbot ini bisa jadi teman belajar seru di rumah maupun di sekolah.
