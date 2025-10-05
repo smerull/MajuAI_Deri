@@ -10,25 +10,244 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
 # --- Configuration & Setup ---
-st.set_page_config(page_title='AI Chatbot (Streamlit Gemini Multimodal)', layout='wide')
-st.title('🤖 Teman Belajar AI Cerdas — Untuk Anak SD (Google Gemini)')
+st.set_page_config(
+    page_title='🌈 Teman Belajar AI',
+    layout='centered',
+    initial_sidebar_state='expanded'
+)
+
+# Sembunyikan header Streamlit
+st.markdown("""
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    .stDeployButton {display: none;}
+    button[kind="header"] {display: none;}
+    [data-testid="stToolbar"] {display: none;}
+    </style>
+""", unsafe_allow_html=True)
+
+# Custom CSS untuk tampilan anak-anak yang simple
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
+    
+    html, body, [class*="css"] {
+        font-family: 'Nunito', sans-serif !important;
+    }
+    
+    .stApp {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+    }
+    
+    .main .block-container {
+        background-color: #ffffff !important;
+        border-radius: 30px !important;
+        padding: 2rem !important;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+        max-width: 900px !important;
+    }
+    
+    /* Sidebar */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #ffe4e1 0%, #ffd1dc 100%) !important;
+    }
+    
+    section[data-testid="stSidebar"] > div {
+        background: linear-gradient(180deg, #ffe4e1 0%, #ffd1dc 100%) !important;
+    }
+    
+    section[data-testid="stSidebar"] * {
+        color: #1a1a1a !important;
+    }
+    
+    section[data-testid="stSidebar"] h2 {
+        color: #c0392b !important;
+        font-size: 1.8rem !important;
+        font-weight: 800 !important;
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+    }
+    
+    section[data-testid="stSidebar"] label {
+        color: #1a1a1a !important;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+    }
+    
+    section[data-testid="stSidebar"] .stMarkdown p {
+        color: #2c3e50 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Button */
+    .stButton > button {
+        background: linear-gradient(90deg, #ff6b6b, #feca57) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 30px !important;
+        padding: 1rem 2rem !important;
+        font-size: 1.3rem !important;
+        font-weight: 700 !important;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stButton > button:hover {
+        transform: scale(1.05) !important;
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5) !important;
+    }
+    
+    /* Input */
+    .stTextInput input {
+        border-radius: 20px !important;
+        border: 3px solid #ff6b6b !important;
+        font-size: 1.2rem !important;
+        background-color: #ffffff !important;
+        color: #1a1a1a !important;
+        padding: 1rem !important;
+        font-weight: 600 !important;
+    }
+    
+    .stTextInput input::placeholder {
+        color: #666666 !important;
+        font-weight: 500 !important;
+    }
+    
+    .stTextInput label {
+        color: #1a1a1a !important;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+    }
+    
+    /* Chat */
+    .stChatMessage {
+        border-radius: 25px !important;
+        padding: 1.2rem !important;
+        margin: 0.8rem 0 !important;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1) !important;
+    }
+    
+    .stChatMessage p {
+        color: #1a1a1a !important;
+        font-size: 1.15rem !important;
+        line-height: 1.6 !important;
+        font-weight: 600 !important;
+    }
+    
+    .stChatMessage[data-testid="user-message"] {
+        background-color: #e3f2fd !important;
+    }
+    
+    .stChatMessage[data-testid="assistant-message"] {
+        background-color: #fff3e0 !important;
+    }
+    
+    /* File uploader */
+    section[data-testid="stFileUploadDropzone"] {
+        background: linear-gradient(135deg, #fff9e6 0%, #ffe4e1 100%) !important;
+        border-radius: 20px !important;
+        padding: 1.5rem !important;
+        border: 3px dashed #feca57 !important;
+    }
+    
+    .uploadedFileName {
+        color: #1a1a1a !important;
+        font-weight: 700 !important;
+    }
+    
+    .stFileUploader label {
+        color: #1a1a1a !important;
+        font-weight: 700 !important;
+        font-size: 1.2rem !important;
+    }
+    
+    .stFileUploader > label > div:first-child {
+        color: #1a1a1a !important;
+        font-weight: 700 !important;
+    }
+    
+    div[data-testid="stFileUploader"] label {
+        color: #1a1a1a !important;
+        font-weight: 700 !important;
+    }
+    
+    div[data-testid="stFileUploader"] > label {
+        color: #1a1a1a !important;
+        font-weight: 700 !important;
+        font-size: 1.2rem !important;
+    }
+    
+    div[data-testid="stFileUploader"] p {
+        color: #1a1a1a !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Alerts */
+    .stSuccess, .stWarning, .stError, .stInfo {
+        border-radius: 15px !important;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+    }
+    
+    .stSuccess {
+        background-color: #d4edda !important;
+        color: #155724 !important;
+        border: 2px solid #28a745 !important;
+    }
+    
+    .stWarning {
+        background-color: #fff3cd !important;
+        color: #856404 !important;
+        border: 2px solid #ffc107 !important;
+    }
+    
+    .stError {
+        background-color: #f8d7da !important;
+        color: #721c24 !important;
+        border: 2px solid #dc3545 !important;
+    }
+    
+    .stInfo {
+        background-color: #d1ecf1 !important;
+        color: #0c5460 !important;
+        border: 2px solid #17a2b8 !important;
+    }
+    
+    /* Divider */
+    hr {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb);
+        margin: 1.5rem 0;
+    }
+    
+    /* Headers */
+    h1, h2, h3 {
+        font-weight: 700 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Title sederhana
+st.markdown("""
+    <div style='text-align: center; padding: 1.5rem; background: linear-gradient(90deg, #ff6b6b, #feca57); border-radius: 25px; margin-bottom: 2rem;'>
+        <h1 style='color: white; margin: 0; font-size: 2.5rem;'>🤖 Teman Belajar AI</h1>
+        <p style='color: white; font-size: 1.2rem; margin: 0.5rem 0 0 0;'>Ayo Bertanya Apa Saja! 🌟</p>
+    </div>
+""", unsafe_allow_html=True)
 
 # --- Helper Functions ---
 
 def get_base64_image(image_file) -> str:
-    """Mengubah file gambar yang diunggah Streamlit menjadi string Base64."""
     try:
         bytes_data = image_file.getvalue()
         return base64.b64encode(bytes_data).decode('utf-8')
     except Exception as e:
-        st.error(f"Error processing image: {e}")
+        st.error(f"❌ Ada masalah dengan gambar: {e}")
         return ""
 
 def process_uploaded_files(uploaded_file):
-    """
-    Memproses file yang diunggah dan menyiapkan konten dalam format 'part' 
-    yang diperlukan oleh Gemini API untuk gambar (inlineData).
-    """
     if uploaded_file is None:
         return None, None
 
@@ -36,10 +255,9 @@ def process_uploaded_files(uploaded_file):
     file_name = uploaded_file.name
 
     if 'image' in file_type:
-        st.info(f"Gambar diunggah: {file_name}")
+        st.success(f"✅ Gambar berhasil diupload: {file_name}")
         base64_img = get_base64_image(uploaded_file)
         
-        # Struktur konten Gemini untuk multimodal
         image_content = {
             "inlineData": {
                 "data": base64_img,
@@ -49,23 +267,18 @@ def process_uploaded_files(uploaded_file):
         return image_content, file_name
 
     elif 'pdf' in file_type:
-        # --- PDF PROCESSING (Placeholder) ---
-        st.warning(f"PDF diunggah: {file_name}. Fitur ini belum aktif.")
+        st.warning(f"📄 PDF: {file_name}. Fitur sedang dikembangkan! 🛠️")
         return None, file_name 
         
     return None, file_name 
 
 def format_messages_for_gemini(messages: List[Dict]) -> List[Dict]:
-    """
-    Mengubah format riwayat pesan Streamlit ke format 'contents' Gemini.
-    """
     gemini_contents = []
     
     for msg in messages:
         role = msg.get('role')
         content = msg.get('content')
         
-        # Lewati system prompt
         if role == 'system':
             continue
             
@@ -86,29 +299,23 @@ def format_messages_for_gemini(messages: List[Dict]) -> List[Dict]:
 
     return gemini_contents
 
-
 def chat_request(messages: List[Dict], model: str, temperature: float, max_tokens: int, api_key: str, system_prompt: str):
-    """Mengirim permintaan ke Gemini API."""
-    
     url = GEMINI_API_URL.format(model=model)
     headers = {'Content-Type': 'application/json'}
     params = {'key': api_key}
     
     gemini_contents = format_messages_for_gemini(messages)
     
-    # Konfigurasi parameter generasi (menggunakan kunci 'generationConfig')
     generation_config = {
         'temperature': temperature,
         'maxOutputTokens': max_tokens,
     }
 
-    # Payload untuk Gemini API. 
     payload = {
         'contents': gemini_contents,
         'generationConfig': generation_config, 
     }
     
-    # Tambahkan 'systemInstruction' hanya jika nilainya tidak kosong. (FIXED)
     if system_prompt and system_prompt.strip():
         payload['systemInstruction'] = system_prompt.strip()
     
@@ -116,53 +323,41 @@ def chat_request(messages: List[Dict], model: str, temperature: float, max_token
     r.raise_for_status()
     return r.json()
 
-# --- Streamlit UI: Sidebar Settings ---
-
+# --- Sidebar ---
 with st.sidebar:
-    st.header('Pengaturan Rahasia ⚙️')
-    st.markdown("Ini adalah tempat untuk mengatur AI-nya!")
+    st.markdown("## ⚙️ Pengaturan")
     
-    # Input kunci API Gemini
-    key_input = st.text_input('Kunci API Gemini (AIzaSy...)', type="password", value='' if GEMINI_API_KEY is None else '')
+    key_input = st.text_input('🔑 Kunci API Gemini', type="password", value='' if GEMINI_API_KEY is None else '')
     
-    # Seleksi Model Gemini. FLASH adalah yang Gratis dan Cepat.
-    model = st.selectbox('Model AI', ['gemini-2.5-flash', 'gemini-2.5-pro'], index=0)
+    with st.expander("🎨 Pengaturan Lanjutan"):
+        model = st.selectbox('Model AI', ['gemini-2.5-flash', 'gemini-2.5-pro'], index=0)
+        temperature = st.slider('Kreativitas', 0.0, 1.0, 0.8, 0.1)
+        max_tokens = st.number_input('Panjang Jawaban', min_value=100, max_value=2000, value=750)
     
-    # Pengaturan untuk tingkat kreativitas dan panjang jawaban
-    temperature = st.slider('Tingkat Kreativitas (Suhu)', 0.0, 1.0, 0.8, 0.05)
-    max_tokens = st.number_input('Panjang Jawaban Maksimal', min_value=50, max_value=4000, value=750)
-    
-    # System prompt baru yang berfokus untuk Anak SD
-    default_system_prompt = 'Kamu adalah guru atau teman virtual yang sangat ramah dan ceria. Jawablah semua pertanyaan dengan bahasa yang sederhana, mudah dipahami, gunakan analogi yang menyenangkan, dan sertakan emoji yang sesuai. Berikan jawaban yang mendidik, singkat, dan menghibur, seolah-olah kamu sedang berbicara dengan anak sekolah dasar.'
-    system_prompt = st.text_area('Peran AI (System prompt)', value=default_system_prompt, height=150)
+    default_system_prompt = 'Kamu adalah guru yang ramah untuk anak SD. Jawab dengan bahasa sederhana, pakai emoji, dan buat jawaban yang menyenangkan!'
+    system_prompt = st.text_area('🎭 Peran AI', value=default_system_prompt, height=120)
     
     st.markdown("---")
-    clear_history = st.button('Bersihkan Obrolan 🗑️')
+    
+    if st.button('🔄 Mulai Baru', use_container_width=True):
+        st.session_state.messages = [{'role': 'system', 'content': system_prompt}]
+        st.rerun()
 
 api_key = key_input.strip() or GEMINI_API_KEY
 if not api_key:
-    st.sidebar.warning('🚨 Kunci API Gemini belum dimasukkan. Masukkan kunci Anda dari Google AI Studio.')
+    st.sidebar.warning('⚠️ Masukkan Kunci API ya!')
 
-# --- Session State Initialization ---
-
+# --- Session State ---
 if 'messages' not in st.session_state:
     st.session_state.messages = [{'role': 'system', 'content': system_prompt}]
 
-# Handle History Clearing
-if clear_history:
-    st.session_state.messages = [{'role': 'system', 'content': system_prompt}]
-    st.experimental_rerun()
-
-# --- Conversation Display ---
-st.subheader('Ayo Bertanya dan Belajar! 🚀')
-
-# Menampilkan pesan
+# --- Chat Display ---
 for msg in st.session_state.messages:
     role = msg.get('role')
     content = msg.get('content')
     
     if isinstance(content, list):
-        text_content = next((item['text'] for item in content if item.get('type') == 'text'), '[Pesan Tanpa Teks]')
+        text_content = next((item['text'] for item in content if item.get('type') == 'text'), '')
         image_content = [
             {"image_url": {"url": f"data:{item['inlineData']['mimeType']};base64,{item['inlineData']['data']}"}} 
             for item in content if item.get('inlineData')
@@ -172,35 +367,35 @@ for msg in st.session_state.messages:
         image_content = []
 
     if role == 'user':
-        st.chat_message("user").markdown(f"**Saya:** {text_content}")
-        for img in image_content:
-            st.chat_message("user").image(img['image_url']['url'], caption='Gambar yang kamu tunjukkan', width=200)
+        with st.chat_message("user", avatar="👦"):
+            st.markdown(text_content)
+            for img in image_content:
+                st.image(img['image_url']['url'], width=300)
     elif role == 'assistant':
-        st.chat_message("assistant").markdown(f"**Teman AI:** {text_content}")
-    elif role == 'system':
-        # System prompt tidak perlu ditampilkan di chat utama
-        pass 
+        with st.chat_message("assistant", avatar="🤖"):
+            st.markdown(text_content)
 
-st.divider()
+st.markdown("---")
 
-# --- Input and File Upload ---
-
+# --- Input Area ---
 uploaded_file = st.file_uploader(
-    "Tunjukkan Gambar (misalnya PR, gambar hewan, dll.) 🖼️", 
+    "📸 Upload Gambar (Opsional)", 
     type=['png', 'jpg', 'jpeg'], 
     key='file_uploader'
 )
 
-user_input = st.text_area('Tuliskan pertanyaanmu di sini...', key='input_text')
+user_input = st.text_input(
+    'Tulis pertanyaanmu di sini...', 
+    key='input_text',
+    placeholder="Contoh: Jelaskan cara kerja pelangi 🌈"
+)
 
-if st.button('Kirim Pertanyaan! 🌟'):
+if st.button('🚀 Kirim!', use_container_width=True):
     if not user_input.strip() and uploaded_file is None:
-        st.warning('Ayo, tuliskan sesuatu atau tunjukkan gambarmu!')
+        st.warning('💭 Tulis pertanyaan atau upload gambar dulu ya!')
     else:
-        # 1. Proses Unggahan File 
         image_content, file_name = process_uploaded_files(uploaded_file)
         
-        # 2. Bangun Konten Pesan 
         new_message_parts = []
         
         if image_content:
@@ -209,19 +404,16 @@ if st.button('Kirim Pertanyaan! 🌟'):
         if user_input.strip():
             new_message_parts.append({"text": user_input, "type": "text"}) 
         elif file_name and not image_content:
-            new_message_parts.append({"text": f"Tolong lihat file ini: {file_name}. Jawab pertanyaan di dalamnya ya.", "type": "text"})
+            new_message_parts.append({"text": f"Lihat file: {file_name}", "type": "text"})
             
-        # 3. Tambahkan Pesan Pengguna ke Riwayat
         if new_message_parts:
             st.session_state.messages.append({'role': 'user', 'content': new_message_parts})
             
-            # 4. Panggil API
             try:
                 if not api_key:
-                    st.error('🚨 Kunci API belum dimasukkan!')
+                    st.error('🚨 Kunci API belum ada!')
                 else:
-                    with st.spinner('Teman AI sedang berpikir... 🤔'):
-                        
+                    with st.spinner('🤔 AI sedang berpikir...'):
                         resp = chat_request(
                             st.session_state.messages, 
                             model, 
@@ -231,23 +423,28 @@ if st.button('Kirim Pertanyaan! 🌟'):
                             system_prompt
                         )
                     
-                    # Ekstrak jawaban dari format respons Gemini
                     try:
                         ai_msg = resp['candidates'][0]['content']['parts'][0]['text']
+                        st.balloons()
                     except (IndexError, KeyError, TypeError):
-                        # Handling Safety Filter atau Response Error
-                        safety_reason = resp.get('promptFeedback', {}).get('blockReason', 'Unknown Error')
-                        st.error(f"❌ Ups! Teman AI tidak bisa menjawab itu ({safety_reason}). Coba pertanyaan yang lain, ya!")
-                        ai_msg = str(resp) 
+                        safety_reason = resp.get('promptFeedback', {}).get('blockReason', 'Error')
+                        st.error(f"❌ AI tidak bisa jawab ({safety_reason}). Coba pertanyaan lain!")
+                        ai_msg = "Maaf, coba pertanyaan lain ya! 😊"
                         
                     st.session_state.messages.append({'role': 'assistant', 'content': ai_msg})
-                    
-                    # Reset input dan reran
-                    st.session_state.file_uploader = None
-                    st.session_state.input_text = ""
-                    st.experimental_rerun()
+                    st.rerun()
                     
             except requests.HTTPError as e:
-                st.error(f'❌ Terjadi masalah dengan koneksi AI: {e} - Pastikan Kunci API Anda benar dan aktif.')
+                st.error(f'❌ Koneksi bermasalah: {e}')
             except Exception as e:
-                st.error(f'❌ Terjadi kesalahan: {e}')
+                st.error(f'❌ Error: {e}')
+
+# Footer simple
+st.markdown("---")
+st.markdown("""
+    <div style='text-align: center; padding: 1rem; background: #fff9e6; border-radius: 20px;'>
+        <p style='color: #e74c3c; font-size: 1.2rem; font-weight: 700; margin: 0;'>
+            🌟 Terus belajar! 📚✨
+        </p>
+    </div>
+""", unsafe_allow_html=True)
